@@ -3,9 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { trpc } from '@/utils/trpc';
 import { useState, useEffect, useCallback } from 'react';
+import { ThemeProvider } from './components/theme-provider';
+import { ThemeToggle } from './components/theme-toggle';
 import type { Counter } from '../../server/src/schema';
 
-function App() {
+function CounterApp() {
   const [counter, setCounter] = useState<Counter | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,7 +46,11 @@ function App() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex items-center justify-center min-h-screen bg-background transition-colors">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+      
       <Card className="w-96">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Counter App</CardTitle>
@@ -52,10 +58,10 @@ function App() {
         <CardContent className="space-y-6">
           {/* Counter Display */}
           <div className="text-center">
-            <div className="text-6xl font-bold text-blue-600 mb-2">
+            <div className="text-6xl font-bold text-primary mb-2">
               {counter.count}
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-muted-foreground">
               Last updated: {counter.updated_at.toLocaleString()}
             </div>
           </div>
@@ -91,13 +97,21 @@ function App() {
           </div>
 
           {isLoading && (
-            <div className="text-center text-sm text-gray-500">
+            <div className="text-center text-sm text-muted-foreground">
               Updating counter...
             </div>
           )}
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider defaultTheme="light">
+      <CounterApp />
+    </ThemeProvider>
   );
 }
 
